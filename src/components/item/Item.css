@@ -1,0 +1,12 @@
+.items {
+  margin:5px 0px;
+  padding: 0;
+}
+
+.checked {
+  text-decoration: line-through;
+}
+
+.pull-right {
+  margin-left: 5px;
+}

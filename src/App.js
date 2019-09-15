@@ -1,26 +1,52 @@
-import React from 'react';
+import React , { Component } from 'react';
+import { connect } from 'react-redux';
 import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import { add, remove, openModal, sortOnText, sortOnDate, filterOnText, filterOnDate, change, check } from './store/actions/createToDo';
+
+import Filters from './components/filters/Filters';
+import Header from './components/header/Header';
+import Inputs from './components/inputs/Inputs';
+import Modal from './components/modal/Modal';
+import Item from './components/item/Item';
+
+class App extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      filterTasks : this.props.tasks.items,
+    }
+  }
+
+  updateStateMainComponent = (value = null) => {
+    if(value){
+      this.setState({ filterTasks : value });
+    } else {
+      this.setState({ filterTasks : this.props.tasks.items });
+    }
+  }
+
+  render () {
+    const { tasks, add, remove, openModal, sortOnText, sortOnDate, filterOnText, filterOnDate, change, check } = this.props;
+
+    return (
+      <div className="col-md-6 offset-md-3">
+        <Filters
+          sortOnText={sortOnText}
+          sortOnDate={sortOnDate}
+          filterOnText={filterOnText}
+          filterOnDate={filterOnDate}
+          toDoList={tasks.items}/>
+        <Header />
+        <Inputs add={add} />
+        <Item toDoList={tasks.items} remove={remove} openModal={openModal} check={check} />
+        <Modal active={tasks.modalActive} change={change} modalData={tasks.modalData}/>
+      </div>
+    )
+  }
 }
 
-export default App;
+export default connect(state => ({
+  tasks: state.tasks,
+}), { add, remove, openModal, sortOnText, sortOnDate, filterOnText, filterOnDate, change, check })(App);

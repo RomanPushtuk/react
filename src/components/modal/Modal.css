@@ -1,0 +1,7 @@
+.enable {
+  display: block;
+}
+
+.disabled {
+  display: none;
+}
