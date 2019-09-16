@@ -10,34 +10,34 @@ const todo = {
     date: '11/11/2000',
   },
   items : [
-    {
-      id : '1',
-      text : 'Текст 1',
-      date: '11/12/2002',
-      visible: true,
-      check : false,
-    },
-    {
-      id : '2',
-      text : 'Текст 2',
-      date: '11/12/2003',
-      visible: true,
-      check : false,
-    },
-    {
-      id : '3',
-      text : 'Текст 3',
-      date: '11/12/2004',
-      visible: true,
-      check : true,
-    },
-    {
-      id : '4',
-      text : 'Текст 4',
-      date: '11/12/2005',
-      visible: true,
-      check : false,
-    },
+    // {
+    //   id : '1',
+    //   text : 'Текст 1',
+    //   date: '11/12/2002',
+    //   visible: true,
+    //   check : false,
+    // },
+    // {
+    //   id : '2',
+    //   text : 'Текст 2',
+    //   date: '11/12/2003',
+    //   visible: true,
+    //   check : false,
+    // },
+    // {
+    //   id : '3',
+    //   text : 'Текст 3',
+    //   date: '11/12/2004',
+    //   visible: true,
+    //   check : true,
+    // },
+    // {
+    //   id : '4',
+    //   text : 'Текст 4',
+    //   date: '11/12/2005',
+    //   visible: true,
+    //   check : false,
+    // },
   ],
 
 }
@@ -121,8 +121,24 @@ const tasks = (state = todo, { type, modalActive, id, text, check, date, directi
 
     case 'SORT_DATE':
       const itemsSortDate = direction == "UP" ?
-      state.items.sort((a, b) => new Date(b.date) - new Date(a.date)):
-      state.items.sort((a, b) => new Date(a.date) - new Date(b.date));
+      state.items.sort((a, b) => {
+        if (Date.parse(b.date) > Date.parse(a.date)){
+          return 1;
+        }
+        if (Date.parse(b.date) < Date.parse(a.date)) {
+          return -1;
+        }
+        return 0
+      }):
+      state.items.sort((a, b) => {
+        if (Date.parse(b.date) < Date.parse(a.date)){
+          return 1;
+        }
+        if (Date.parse(b.date) > Date.parse(a.date)) {
+          return -1;
+        }
+        return 0
+      });
       return {
         ...state,
         items: itemsSortDate,

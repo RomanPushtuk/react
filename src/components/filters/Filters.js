@@ -10,7 +10,7 @@ class Filters extends Component {
     directionSortDate : "DOWN",
     filterTasks : [],
     text: '',
-    date: '11/11/2000',
+    date: '',
   }
 
   sortOnText = () => {
@@ -60,7 +60,7 @@ class Filters extends Component {
     })
     if (date) {
       tasks.forEach(item => {
-        if (!item.date.startsWith(date)){
+        if (Date.parse(date) !== Date.parse(item.date)){
           item.visible = false;
         }
       });
@@ -71,6 +71,7 @@ class Filters extends Component {
   filterOnDate = date => {
     const { filterOnDate, toDoList, updateStateMainComponent } = this.props;
     this.state.date = date;
+    console.log(date);
     const text = this.state.text;
     const tasks = toDoList.map(item => {
       return {
@@ -78,11 +79,13 @@ class Filters extends Component {
         visible: true,
       }
     })
-    tasks.forEach(item => {
-      if (!item.date.startsWith(date)){
-        item.visible = false;
-      }
-    })
+    if (date){
+      tasks.forEach(item => {
+        if (Date.parse(date) !== Date.parse(item.date)){
+          item.visible = false;
+        }
+      })
+    }
     if (text) {
       tasks.forEach(item => {
         if (!item.text.startsWith(date)){
@@ -101,7 +104,7 @@ class Filters extends Component {
         <input type="text" className="form-control" onChange={this.filterOnText}/>
         <label>Время</label>
         <div className="input-group">
-          <DatePicker className="form-control" onChange={this.filterOnDate} selected={new Date(this.state.date)} />
+          <DatePicker className="form-control" onChange={this.filterOnDate} selected={this.state.date} showDisabledMonthNavigation />
         </div>
       </div>
       <div className="form-group">
