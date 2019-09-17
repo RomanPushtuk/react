@@ -1,4 +1,6 @@
 import React , { Component } from 'react';
+import moment from 'moment';
+import { guidGenerator } from '../../shadule/shadule'
 import './Inputs.css';
 
 import DatePicker from "react-datepicker";
@@ -36,25 +38,18 @@ class Inputs extends Component {
     }
   }
 
-  guidGenerator = () => {
-    var S4 = function() {
-       return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-    };
-    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
-  }
-
   addTask = () => {
-    const date = new Date(this.state.date);
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-
-    // console.log(this.state.text, `${month}/${day}/${year}`);
-    // console.log(this.guidGenerator());
-    console.log(Date.parse(date));
-    // console.log(new Date(b.date));
+    const date = moment(this.state.date).format("MM/DD/YYYY");
     const { add } = this.props;
-    add(this.guidGenerator(), false, this.state.text, `${month}/${day}/${year}`);
+    const text = this.state.text;
+    const newTask = {
+      id: guidGenerator(),
+      check: false,
+      visible: true,
+      text,
+      date,
+    }
+    add(newTask);
   }
 
   render () {
@@ -85,7 +80,7 @@ class Inputs extends Component {
               <DatePicker
               id="addDate"
               className="form-control"
-              onChange={date => this.handleSetDate(date)}
+              onChange={this.handleSetDate}
               selected={this.state.date}
               />
             <button className="input-group-addon" onClick={this.addTask}>

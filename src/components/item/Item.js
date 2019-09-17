@@ -5,7 +5,12 @@ class Item extends Component {
 
   handlerOpenModal(id, text, date){
     const { openModal } = this.props;
-    openModal(true, id, text, date);
+    const modalObj = {
+      id,
+      text,
+      date
+    }
+    openModal(modalObj);
   }
 
   handleCheck(id){

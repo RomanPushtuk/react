@@ -1,9 +1,8 @@
 import React , { Component } from 'react';
 import { connect } from 'react-redux';
-import logo from './logo.svg';
 import './App.css';
 
-import { add, remove, openModal, sortOnText, sortOnDate, filterOnText, filterOnDate, change, check } from './store/actions/createToDo';
+import { add, remove, openModal, sortOnText, sortOnDate, filter, change, check } from './store/actions/createToDo';
 
 import Filters from './components/filters/Filters';
 import Header from './components/header/Header';
@@ -15,33 +14,24 @@ class App extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      filterTasks : this.props.tasks.items,
-    }
-  }
-
-  updateStateMainComponent = (value = null) => {
-    if(value){
-      this.setState({ filterTasks : value });
-    } else {
-      this.setState({ filterTasks : this.props.tasks.items });
+      filterTasks : this.props.tasks,
     }
   }
 
   render () {
-    const { tasks, add, remove, openModal, sortOnText, sortOnDate, filterOnText, filterOnDate, change, check } = this.props;
+    const { tasks, filter, modal, add, remove, openModal, sortOnText, sortOnDate, change, check } = this.props;
 
     return (
       <div className="col-md-6 offset-md-3">
         <Filters
           sortOnText={sortOnText}
           sortOnDate={sortOnDate}
-          filterOnText={filterOnText}
-          filterOnDate={filterOnDate}
-          toDoList={tasks.items}/>
+          filter={filter}
+          toDoList={tasks}/>
         <Header />
         <Inputs add={add} />
-        <Item toDoList={tasks.items} remove={remove} openModal={openModal} check={check} />
-        <Modal active={tasks.modalActive} change={change} modalData={tasks.modalData}/>
+        <Item toDoList={tasks} remove={remove} openModal={openModal} check={check} />
+        <Modal change={change} modalData={modal}/>
       </div>
     )
   }
@@ -49,4 +39,5 @@ class App extends Component {
 
 export default connect(state => ({
   tasks: state.tasks,
-}), { add, remove, openModal, sortOnText, sortOnDate, filterOnText, filterOnDate, change, check })(App);
+  modal: state.modal,
+}), { add, remove, openModal, sortOnText, sortOnDate, filter, change, check })(App);

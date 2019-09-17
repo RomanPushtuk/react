@@ -17,14 +17,12 @@ class Filters extends Component {
     const { sortOnText } = this.props;
     const direction = this.state.directionSortText;
     if ( direction === "DOWN"){
-      console.log('Сортировака по тексту вниз');
       sortOnText(direction);
-      this.state.directionSortText = 'UP';
+      this.setState({ directionSortText : 'UP' });
     }
     if ( direction === "UP"){
       sortOnText(direction);
-      console.log('Сортировака по тексту вверх');
-      this.state.directionSortText = 'DOWN';
+      this.setState({ directionSortText : 'DOWN' });
     }
   }
 
@@ -32,27 +30,23 @@ class Filters extends Component {
     const { sortOnDate } = this.props;
     const direction = this.state.directionSortDate;
     if ( direction === "DOWN"){
-      console.log('Сортировака по дате вниз');
       sortOnDate(direction);
-      this.state.directionSortDate = 'UP';
+      this.setState({ directionSortDate : 'UP' });
     }
     if ( direction === "UP"){
       sortOnDate(direction);
-      console.log('Сортировака по дате вверх');
-      this.state.directionSortDate = 'DOWN';
+      this.setState({ directionSortDate : 'DOWN' });
     }
   }
 
   filterOnText = ({ target: { value }}) => {
-    const { filterOnText, toDoList, updateStateMainComponent} = this.props;
-    this.state.text = value;
+    const { filter, toDoList} = this.props;
+    this.setState({ text : value });
     const date = this.state.date;
-    const tasks = toDoList.map(item => {
-      return {
-        ...item,
-        visible: true,
-      }
-    })
+    const tasks = toDoList.map(item => ({
+      ...item,
+      visible: true,
+    }))
     tasks.forEach(item => {
       if (!item.text.startsWith(value)){
         item.visible = false;
@@ -65,20 +59,17 @@ class Filters extends Component {
         }
       });
     }
-    filterOnText(tasks);
+    filter(tasks);
   }
 
   filterOnDate = date => {
-    const { filterOnDate, toDoList, updateStateMainComponent } = this.props;
-    this.state.date = date;
-    console.log(date);
+    const { filter, toDoList } = this.props;
+    this.setState({ date });
     const text = this.state.text;
-    const tasks = toDoList.map(item => {
-      return {
-        ...item,
-        visible: true,
-      }
-    })
+    const tasks = toDoList.map(item => ({
+      ...item,
+      visible: true,
+    }))
     if (date){
       tasks.forEach(item => {
         if (Date.parse(date) !== Date.parse(item.date)){
@@ -93,7 +84,7 @@ class Filters extends Component {
         }
       });
     }
-    filterOnDate(tasks);
+    filter(tasks);
   }
 
   render () {

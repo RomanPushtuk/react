@@ -1,148 +1,67 @@
-const storage = [];
+import moment from 'moment';
+import { save, sortDate, sortText} from '../../shadule/shadule';
+import { getTasks } from '../sellectors/sellectors';
 
-const todo = {
-  modalActive : false,
-  filtersActive : false,
-  filterItems : [],
-  modalData : {
-    id: '0',
-    text: '',
-    date: '11/11/2000',
-  },
-  items : [
-    // {
-    //   id : '1',
-    //   text : 'Текст 1',
-    //   date: '11/12/2002',
-    //   visible: true,
-    //   check : false,
-    // },
-    // {
-    //   id : '2',
-    //   text : 'Текст 2',
-    //   date: '11/12/2003',
-    //   visible: true,
-    //   check : false,
-    // },
-    // {
-    //   id : '3',
-    //   text : 'Текст 3',
-    //   date: '11/12/2004',
-    //   visible: true,
-    //   check : true,
-    // },
-    // {
-    //   id : '4',
-    //   text : 'Текст 4',
-    //   date: '11/12/2005',
-    //   visible: true,
-    //   check : false,
-    // },
-  ],
+import {
+  ADD_TASK,
+  REMOVE_TASK,
+  CHANGE_TASK,
+  CHECK_TASK,
+  FILTER,
+  SORT_TEXT,
+  SORT_DATE,
+ } from '../../constants';
 
-}
-
-export function getItems(state = todo) {
-  return state.items;
-}
-
-const tasks = (state = todo, { type, modalActive, id, text, check, date, direction, value, filterTasks }) => {
+const tasks = (state = getTasks(), {
+  type,
+  id,
+  text,
+  check,
+  date,
+  direction,
+  filterTasks,
+  obj
+ }) => {
   switch (type) {
-    case 'ADD_TASK':
-      return {
-        ...state,
-        items: [
-          ...state.items,
-          { id, text, check, date, visible: true },
-        ],
-      }
+      case ADD_TASK :
+        return save([
+          ...state,
+          { ...obj }
+        ]);
 
-    case 'OPEN_MODAL':
-      return {
-        ...state,
-        modalActive: !state.modalActive,
-        modalData: {
-          id,
-          text,
-          date,
-        }
-      }
+      case REMOVE_TASK :
+        return save([
+           ...state.filter( item => id !== item.id)
+        ]);
 
-    case 'REMOVE_TASK':
-      return {
-        ...state,
-        items: state.items.filter( item => id !== item.id),
-      }
+      case CHANGE_TASK :
+        return save([
+            ...state.map( item => item.id === id ? {
+              ...item,
+              text,
+              date: moment(date).format("MM/DD/YYYY")
+          } : item )
+        ]);
 
-    case 'CHANGE_TASK':
-      const daTe = new Date(date);
-      const day = daTe.getDate();
-      const month = daTe.getMonth() + 1;
-      const year = daTe.getFullYear();
-      return {
-        ...state,
-        items: state.items.map( item => item.id === id ? {
-          ...item,
-          text: text,
-          date: `${month}/${day}/${year}`,
-        } : item ),
-      }
+      case CHECK_TASK :
+        return save([
+          ...state.map(item => item.id === id ? {
+            ...item,
+            check: !item.check
+          } : item )
+        ]);
 
-    case 'FILTER_TEXT':
-      return {
-        ...state,
-        items: filterTasks
-      }
+      case FILTER :
+        return [...filterTasks];
 
-    case 'FILTER_DATE':
-      return {
-        ...state,
-        items: filterTasks
-      }
-
-    case 'CHECK_TASK':
-      return {
-        ...state,
-        items: state.items.map(item => item.id === id ? {
-          ...item,
-          check: !item.check,
-        } : item ),
-      }
-
-    case 'SORT_TEXT':
-      const itemsSortText = direction == "UP" ?
-      state.items.sort((a,b) => (a.text > b.text) ? 1 : ((b.text > a.text) ? -1 : 0)) :
-      state.items.sort((a,b) => (a.text < b.text) ? 1 : ((b.text < a.text) ? -1 : 0));
-      return {
-        ...state,
-        items: itemsSortText,
-      }
+      case SORT_TEXT :
+        const itemsSortText = sortText(state, direction);
+        return [...itemsSortText];
 
 
-    case 'SORT_DATE':
-      const itemsSortDate = direction == "UP" ?
-      state.items.sort((a, b) => {
-        if (Date.parse(b.date) > Date.parse(a.date)){
-          return 1;
-        }
-        if (Date.parse(b.date) < Date.parse(a.date)) {
-          return -1;
-        }
-        return 0
-      }):
-      state.items.sort((a, b) => {
-        if (Date.parse(b.date) < Date.parse(a.date)){
-          return 1;
-        }
-        if (Date.parse(b.date) > Date.parse(a.date)) {
-          return -1;
-        }
-        return 0
-      });
-      return {
-        ...state,
-        items: itemsSortDate,
-      }
+      case SORT_DATE :
+        const itemsSortDate = sortDate(state, direction);
+        return [...itemsSortDate];
 
     default:
       return state;

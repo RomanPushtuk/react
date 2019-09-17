@@ -1,39 +1,38 @@
-import React , { Component, useState } from 'react';
-// import './Modal.css';
+import React , { Component } from 'react';
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 class Modal extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      text : '',
-      date: '11/11/2000',
-    }
+  state = {
+    text : '',
+    date: null,
   }
 
   handlerChangeText = ({ target: { value }}) => {
     this.setState({
-      ...this.props.modalData,
-      ...this.state,
       text: value,
     });
   }
 
   handlerChangeDate = (date) => {
     this.setState({
-      ...this.props.modalData,
-      ...this.state,
       date
     });
-    console.log(this.props.modalData);
-    console.log(this.state);
   }
 
   changeTask = () => {
     const { change } = this.props;
-    change(this.props.modalData.id, this.state.text, this.state.date);
+    if( !this.state.text && !this.state.date ){
+      return change(this.props.modalData.id, this.props.modalData.text, this.props.modalData.date);
+    }
+    if( !this.state.text ){
+      return change(this.props.modalData.id, this.props.modalData.text, this.state.date);
+    }
+    if( !this.state.date ){
+      return change(this.props.modalData.id, this.state.text, this.props.modalData.date);
+    }
+    return change(this.props.modalData.id, this.state.text, this.state.date);
     this.setState({});
   }
 
@@ -55,7 +54,7 @@ class Modal extends Component {
                   <input type="text" className="form-control" onChange={this.handlerChangeText} defaultValue={this.state.text ? this.state.text : this.props.modalData.text} />
                   <label>Время</label>
                   <div className="input-group">
-                    <DatePicker className="form-control" onChange={this.handlerChangeDate} selected={new Date(this.state.date ? this.state.date : this.props.modalData.date )} />
+                    <DatePicker className="form-control" onChange={this.handlerChangeDate} selected={this.state.date ? new Date(this.state.date) : new Date(this.props.modalData.date)} />
                   </div>
                 </div>
               </form>

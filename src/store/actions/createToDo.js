@@ -1,9 +1,6 @@
-export const add = (id, check, text, date) => ({
+export const add = obj => ({
   type: 'ADD_TASK',
-  id,
-  check,
-  text,
-  date,
+  obj,
 });
 
 export const remove = id => ({
@@ -11,13 +8,8 @@ export const remove = id => ({
   id,
 });
 
-export const filterOnText = filterTasks => ({
-  type: 'FILTER_TEXT',
-  filterTasks,
-})
-
-export const filterOnDate = filterTasks => ({
-  type: 'FILTER_DATE',
+export const filter = filterTasks => ({
+  type: 'FILTER',
   filterTasks,
 })
 
@@ -27,16 +19,13 @@ export const sortOnText = direction => ({
 });
 
 export const sortOnDate = direction => ({
-  type: 'SORT_TEXT',
+  type: 'SORT_DATE',
   direction,
 });
 
-export const openModal = (modalActive, id, text, date ) => ({
+export const openModal = obj => ({
   type: 'OPEN_MODAL',
-  modalActive,
-  id,
-  text,
-  date,
+  obj,
 });
 
 export const closeModal = modalActive => ({
@@ -44,7 +33,7 @@ export const closeModal = modalActive => ({
   modalActive,
 });
 
-export const check = (id) => ({
+export const check = id => ({
   type: 'CHECK_TASK',
   id,
 });
