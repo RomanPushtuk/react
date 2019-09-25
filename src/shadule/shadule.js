@@ -10,14 +10,11 @@ export function load(){
   for (var key in storageData) {
     makeArray.push(storageData[key]);
   }
-  return [...makeArray];
+  return makeArray;
 }
 
 export function save(data){
   localStorage.setItem(TASKS, JSON.stringify(data))
-  return [
-    ...data,
-  ];
 }
 
 export function guidGenerator(){

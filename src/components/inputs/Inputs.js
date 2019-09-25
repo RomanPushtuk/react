@@ -1,7 +1,9 @@
 import React , { Component } from 'react';
 import moment from 'moment';
-import { guidGenerator } from '../../shadule/shadule'
+import { guidGenerator } from '../../shadule/shadule';
 import './Inputs.css';
+
+// import { loadTasks } from '../../store/sellectors/sellectors';
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -29,7 +31,6 @@ class Inputs extends Component {
   }
 
   handleSetDate = (date) => {
-    console.log(date);
     if (date) {
       this.setState({
         date: date,

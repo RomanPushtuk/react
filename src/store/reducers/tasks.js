@@ -1,18 +1,15 @@
 import moment from 'moment';
-import { save, sortDate, sortText} from '../../shadule/shadule';
-import { getTasks } from '../sellectors/sellectors';
 
 import {
   ADD_TASK,
   REMOVE_TASK,
   CHANGE_TASK,
   CHECK_TASK,
-  FILTER,
-  SORT_TEXT,
-  SORT_DATE,
  } from '../../constants';
 
-const tasks = (state = getTasks(), {
+const initialState = [];
+
+const tasks = (state = initialState, {
   type,
   id,
   text,
@@ -24,44 +21,32 @@ const tasks = (state = getTasks(), {
  }) => {
   switch (type) {
       case ADD_TASK :
-        return save([
+        return [
           ...state,
           { ...obj }
-        ]);
+        ];
 
       case REMOVE_TASK :
-        return save([
+        return [
            ...state.filter( item => id !== item.id)
-        ]);
+        ];
 
       case CHANGE_TASK :
-        return save([
+        return [
             ...state.map( item => item.id === id ? {
               ...item,
               text,
               date: moment(date).format("MM/DD/YYYY")
           } : item )
-        ]);
+        ];
 
       case CHECK_TASK :
-        return save([
+        return [
           ...state.map(item => item.id === id ? {
             ...item,
             check: !item.check
           } : item )
-        ]);
-
-      case FILTER :
-        return [...filterTasks];
-
-      case SORT_TEXT :
-        const itemsSortText = sortText(state, direction);
-        return [...itemsSortText];
-
-
-      case SORT_DATE :
-        const itemsSortDate = sortDate(state, direction);
-        return [...itemsSortDate];
+        ];
 
     default:
       return state;

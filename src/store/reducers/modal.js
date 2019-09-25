@@ -1,10 +1,6 @@
 import { OPEN_MODAL } from '../../constants';
 
-const initialState = {
-  id: '',
-  text: '',
-  date: null,
-}
+const initialState = {}
 
 const modal = (state = initialState, { type, obj }) => {
   switch (type) {

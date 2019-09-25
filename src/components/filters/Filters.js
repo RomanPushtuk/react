@@ -1,6 +1,8 @@
 import React , { Component } from 'react';
 import './Filters.css';
 
+import { sortDate, sortText} from '../../shadule/shadule';
+
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -8,39 +10,54 @@ class Filters extends Component {
   state = {
     directionSortText : "DOWN",
     directionSortDate : "DOWN",
-    filterTasks : [],
     text: '',
     date: '',
   }
 
   sortOnText = () => {
-    const { sortOnText } = this.props;
+    const { getData, toDoList } = this.props;
     const direction = this.state.directionSortText;
     if ( direction === "DOWN"){
-      sortOnText(direction);
+      const tasks = sortText([...toDoList], direction);
+      getData({
+        tasks,
+        filter : true,
+      });
       this.setState({ directionSortText : 'UP' });
     }
     if ( direction === "UP"){
-      sortOnText(direction);
+      const tasks = sortText([...toDoList], direction);
+      getData({
+        tasks,
+        filter : true,
+      });
       this.setState({ directionSortText : 'DOWN' });
     }
   }
 
   sortOnDate = () => {
-    const { sortOnDate } = this.props;
+    const { getData, toDoList } = this.props;
     const direction = this.state.directionSortDate;
     if ( direction === "DOWN"){
-      sortOnDate(direction);
+      const tasks = sortDate([...toDoList], direction);
+      getData({
+        tasks,
+        filter : true,
+      });
       this.setState({ directionSortDate : 'UP' });
     }
     if ( direction === "UP"){
-      sortOnDate(direction);
+      const tasks = sortDate([...toDoList], direction);
+      getData({
+        tasks,
+        filter : true,
+      });
       this.setState({ directionSortDate : 'DOWN' });
     }
   }
 
   filterOnText = ({ target: { value }}) => {
-    const { filter, toDoList} = this.props;
+    const { getData , toDoList} = this.props;
     this.setState({ text : value });
     const date = this.state.date;
     const tasks = toDoList.map(item => ({
@@ -59,11 +76,14 @@ class Filters extends Component {
         }
       });
     }
-    filter(tasks);
+    getData({
+      tasks,
+      filter : true,
+    });
   }
 
   filterOnDate = date => {
-    const { filter, toDoList } = this.props;
+    const { getData, toDoList } = this.props;
     this.setState({ date });
     const text = this.state.text;
     const tasks = toDoList.map(item => ({
@@ -84,7 +104,10 @@ class Filters extends Component {
         }
       });
     }
-    filter(tasks);
+    getData({
+      tasks,
+      filter : true,
+    });
   }
 
   render () {

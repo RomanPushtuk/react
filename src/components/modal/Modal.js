@@ -23,17 +23,17 @@ class Modal extends Component {
 
   changeTask = () => {
     const { change } = this.props;
+    const { id, text, date } = this.props.modalData;
     if( !this.state.text && !this.state.date ){
-      return change(this.props.modalData.id, this.props.modalData.text, this.props.modalData.date);
+      return change(id, text, date);
     }
     if( !this.state.text ){
-      return change(this.props.modalData.id, this.props.modalData.text, this.state.date);
+      return change(id, text, this.state.date);
     }
     if( !this.state.date ){
-      return change(this.props.modalData.id, this.state.text, this.props.modalData.date);
+      return change(id, this.state.text, date);
     }
-    return change(this.props.modalData.id, this.state.text, this.state.date);
-    this.setState({});
+    return change(id, this.state.text, this.state.date);
   }
 
   render () {
@@ -51,16 +51,31 @@ class Modal extends Component {
               <form>
                 <div className="form-group">
                   <label>Текст</label>
-                  <input type="text" className="form-control" onChange={this.handlerChangeText} defaultValue={this.state.text ? this.state.text : this.props.modalData.text} />
+                  <input
+                    type="text"
+                    className="form-control"
+                    onChange={this.handlerChangeText}
+                    defaultValue={this.state.text ? this.state.text : this.props.modalData.text}
+                  />
                   <label>Время</label>
                   <div className="input-group">
-                    <DatePicker className="form-control" onChange={this.handlerChangeDate} selected={this.state.date ? new Date(this.state.date) : new Date(this.props.modalData.date)} />
+                    <DatePicker 
+                      className="form-control"
+                      onChange={this.handlerChangeDate}
+                      selected={this.state.date ? new Date(this.state.date) : new Date(this.props.modalData.date)}
+                    />
                   </div>
                 </div>
               </form>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-outline-dark" data-dismiss="modal" aria-label="Close" onClick={this.changeTask}>
+              <button
+                type="button"
+                className="btn btn-outline-dark"
+                data-dismiss="modal"
+                aria-label="Close"
+                onClick={this.changeTask}
+              >
                 Save
               </button>
             </div>

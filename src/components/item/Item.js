@@ -49,6 +49,7 @@ class Item extends Component {
               </li>
             )
           }
+        return null;
         })}
       </ul>
     )

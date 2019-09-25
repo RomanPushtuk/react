@@ -1,6 +1,10 @@
 import { createStore, compose } from 'redux';
 import rootReducer from './reducers/index';
 
+import { load } from '../shadule/shadule';
+
+import { TASKS } from '../constants';
+
 /* eslint-disable no-underscore-dangle */
 const composeEnhancers =
   process.env.NODE_ENV !== 'production' &&
@@ -17,6 +21,19 @@ const configureStore = preloadedState => (
   )
 );
 
-const store = configureStore({});
+const preloadedState = {
+  modal : {
+    id: '',
+    text: '',
+    date: null,
+  },
+  tasks : load(),
+}
+
+const store = configureStore(preloadedState);
+
+store.subscribe(()=>{
+  localStorage.setItem(TASKS, JSON.stringify(store.getState().tasks));
+})
 
 export default store;
