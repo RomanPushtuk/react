@@ -24,14 +24,51 @@ export function guidGenerator(){
   return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 }
 
+export function filterText(state, textFilter) {
+  console.log(textFilter);
+  const tasks = JSON.parse(JSON.stringify(state));
+  if (textFilter) {
+    tasks.forEach(item => {
+      if (!item.text.startsWith(textFilter)){
+        item.visible = false;
+      }
+    });
+  }
+  return tasks;
+}
+
+export function filterDate(state, textDate) {
+  console.log(textDate);
+  const tasks = JSON.parse(JSON.stringify(state));
+  if (textDate){
+    tasks.forEach(item => {
+      if (Date.parse(textDate) !== Date.parse(item.date)){
+        item.visible = false;
+      }
+    });
+  }
+  return tasks;
+}
+
 export function sortDate(state, direction){
-  return direction === "UP" ?
-  state.sort((a, b) => moment(b.date, 'MM/DD/YYYY') - moment(a.date, 'MM/DD/YYYY')):
-  state.sort((a, b) => moment(a.date, 'MM/DD/YYYY') - moment(b.date, 'MM/DD/YYYY'));
+  const tasks = JSON.parse(JSON.stringify(state));
+  if (direction) {
+    return direction === "UP" ?
+    tasks.sort((a, b) => moment(b.date, 'MM/DD/YYYY') - moment(a.date, 'MM/DD/YYYY')):
+    tasks.sort((a, b) => moment(a.date, 'MM/DD/YYYY') - moment(b.date, 'MM/DD/YYYY'));
+  }
+  console.log("date", tasks);
+  return tasks;
 }
 
 export function sortText(state, direction){
-  return direction === "UP" ?
-  state.sort((a,b) => (a.text > b.text) ? 1 : ((b.text > a.text) ? -1 : 0)):
-  state.sort((a,b) => (a.text < b.text) ? 1 : ((b.text < a.text) ? -1 : 0));
+  const tasks = JSON.parse(JSON.stringify(state));
+  // console.log("text", tasks);
+  if (direction) {
+    return direction === "UP" ?
+    tasks.sort((a,b) => (a.text > b.text) ? 1 : ((b.text > a.text) ? -1 : 0)):
+    tasks.sort((a,b) => (a.text < b.text) ? 1 : ((b.text < a.text) ? -1 : 0));
+  }
+  console.log("text", tasks);
+  return tasks;
 }

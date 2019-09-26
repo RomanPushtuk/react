@@ -4,6 +4,8 @@ import './App.css';
 
 import { add, remove, openModal, change, check } from './store/actions/createToDo';
 
+import { sortText, sortDate, filterText, filterDate } from './shadule/shadule';
+
 import Filters from './components/filters/Filters';
 import Header from './components/header/Header';
 import Inputs from './components/inputs/Inputs';
@@ -14,57 +16,40 @@ class App extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      tasks : this.props.tasks,
-      filter : false,
+      filterData : {
+        textDirection : "",
+        dateDirection : "",
+        textFilter : "",
+        dateFilter : "",
+      },
     }
   }
 
-  getData = newState => {
+  setFilterData = newFilters => {
     this.setState({
-      ...newState,
-    });
-  }
-
-  // Эта штука нужна для того, чтобы понимать когда пользователь закончил работать с фильтрами
-  // Тоесть когда у нас пользователь работает с сортировками и фильтрами он использует
-  // с this.state, но когда мы что-то добаляем в store, переключаем флаг this.state.filter = fasle
-  // (выключаем работу с фильтрами) и добавляем данные в store
-  // Не придумал , другого норм способа.
-  update = () => {
-    this.setState(function(state, props) {
-      return {
-        tasks : props.tasks,
-        filter : false,
+      filterData : {
+        ...this.state.filterData,
+        ...newFilters,
       }
     });
   }
 
-  add = newTask => {
-    const { add } = this.props;
-    add(newTask);
-    this.update();
-  }
-
-  remove = id => {
-    const { remove } = this.props;
-    remove(id);
-    this.update();
-  }
-
-  check = id => {
-    const { check } = this.props;
-    check(id);
-    this.update();
-  }
-
-  change = (id, text, date) => {
-    const { change } = this.props;
-    change(id, text, date);
-    this.update();
+  filter = () => {
+    let tasks = [...this.props.tasks];
+    const { textDirection, dateDirection, textFilter, dateFilter } = this.state.filterData;
+    const filter1 = sortText(tasks, textDirection);
+    const filter2 = sortDate(filter1, dateDirection);
+    const filter3 = filterText(filter2, textFilter);
+    const filterTasks = filterDate(filter3, dateFilter);
+    return filterTasks || tasks;
   }
 
   render () {
     const {
+       add,
+       remove,
+       check,
+       change,
        tasks,
        modal,
        openModal,
@@ -73,21 +58,20 @@ class App extends Component {
     return (
       <div className="col-md-6 offset-md-3">
         <Filters
-          getData={this.getData}
-          toDoList={this.state.tasks}
+          setFilterData={this.setFilterData}
         />
         <Header />
         <Inputs
-          add={this.add}
+          add={add}
         />
         <Item
-          toDoList={this.state.filter ? this.state.tasks : tasks}
-          remove={this.remove}
+          toDoList={this.filter()}
+          remove={remove}
           openModal={openModal}
-          check={this.check}
+          check={check}
         />
         <Modal
-          change={this.change}
+          change={change}
           modalData={modal}
         />
       </div>

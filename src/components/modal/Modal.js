@@ -15,7 +15,7 @@ class Modal extends Component {
     });
   }
 
-  handlerChangeDate = (date) => {
+  handlerChangeDate = date => {
     this.setState({
       date
     });
@@ -59,7 +59,7 @@ class Modal extends Component {
                   />
                   <label>Время</label>
                   <div className="input-group">
-                    <DatePicker 
+                    <DatePicker
                       className="form-control"
                       onChange={this.handlerChangeDate}
                       selected={this.state.date ? new Date(this.state.date) : new Date(this.props.modalData.date)}

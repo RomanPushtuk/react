@@ -1,113 +1,55 @@
 import React , { Component } from 'react';
 import './Filters.css';
 
-import { sortDate, sortText} from '../../shadule/shadule';
+// import { sortDate, sortText} from '../../shadule/shadule';
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 class Filters extends Component {
   state = {
-    directionSortText : "DOWN",
-    directionSortDate : "DOWN",
-    text: '',
-    date: '',
+    textDirection : "",
+    dateDirection : "",
+    textFilter : "",
+    dateFilter : "",
   }
 
   sortOnText = () => {
-    const { getData, toDoList } = this.props;
-    const direction = this.state.directionSortText;
-    if ( direction === "DOWN"){
-      const tasks = sortText([...toDoList], direction);
-      getData({
-        tasks,
-        filter : true,
-      });
-      this.setState({ directionSortText : 'UP' });
+    const { setFilterData } = this.props;
+    const direction = this.state.textDirection;
+    if ( direction === "DOWN" || !direction){
+      this.setState({ textDirection : 'UP' });
+      setFilterData({ textDirection : 'UP' });
     }
     if ( direction === "UP"){
-      const tasks = sortText([...toDoList], direction);
-      getData({
-        tasks,
-        filter : true,
-      });
-      this.setState({ directionSortText : 'DOWN' });
+      this.setState({ textDirection : 'DOWN' });
+      setFilterData({ textDirection : 'DOWN' });
     }
   }
 
   sortOnDate = () => {
-    const { getData, toDoList } = this.props;
-    const direction = this.state.directionSortDate;
-    if ( direction === "DOWN"){
-      const tasks = sortDate([...toDoList], direction);
-      getData({
-        tasks,
-        filter : true,
-      });
-      this.setState({ directionSortDate : 'UP' });
+    const { setFilterData } = this.props;
+    const direction = this.state.dateDirection;
+    if ( direction === "DOWN" || !direction){
+      this.setState({ dateDirection : 'UP' });
+      setFilterData({ dateDirection : 'UP' });
     }
     if ( direction === "UP"){
-      const tasks = sortDate([...toDoList], direction);
-      getData({
-        tasks,
-        filter : true,
-      });
-      this.setState({ directionSortDate : 'DOWN' });
+      this.setState({ dateDirection : 'DOWN' });
+      setFilterData({ dateDirection : 'DOWN' });
     }
   }
 
   filterOnText = ({ target: { value }}) => {
-    const { getData , toDoList} = this.props;
-    this.setState({ text : value });
-    const date = this.state.date;
-    const tasks = toDoList.map(item => ({
-      ...item,
-      visible: true,
-    }))
-    tasks.forEach(item => {
-      if (!item.text.startsWith(value)){
-        item.visible = false;
-      }
-    })
-    if (date) {
-      tasks.forEach(item => {
-        if (Date.parse(date) !== Date.parse(item.date)){
-          item.visible = false;
-        }
-      });
-    }
-    getData({
-      tasks,
-      filter : true,
-    });
+      const { setFilterData } = this.props;
+      this.setState({ textFilter : value });
+      setFilterData({ textFilter : value });
   }
 
   filterOnDate = date => {
-    const { getData, toDoList } = this.props;
-    this.setState({ date });
-    const text = this.state.text;
-    const tasks = toDoList.map(item => ({
-      ...item,
-      visible: true,
-    }))
-    if (date){
-      tasks.forEach(item => {
-        if (Date.parse(date) !== Date.parse(item.date)){
-          item.visible = false;
-        }
-      })
-    }
-    if (text) {
-      tasks.forEach(item => {
-        if (!item.text.startsWith(date)){
-          item.visible = false;
-        }
-      });
-    }
-    getData({
-      tasks,
-      filter : true,
-    });
+    const { setFilterData } = this.props;
+    this.setState({ dateFilter : date });
+    setFilterData({ dateFilter : date });
   }
 
   render () {
@@ -118,7 +60,7 @@ class Filters extends Component {
         <input type="text" className="form-control" onChange={this.filterOnText}/>
         <label>Время</label>
         <div className="input-group">
-          <DatePicker className="form-control" onChange={this.filterOnDate} selected={this.state.date} showDisabledMonthNavigation />
+          <DatePicker className="form-control" onChange={this.filterOnDate} selected={this.state.dateFilter} showDisabledMonthNavigation />
         </div>
       </div>
       <div className="form-group">
